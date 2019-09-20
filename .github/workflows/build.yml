@@ -28,9 +28,9 @@ jobs:
             modules: off
             gotags: cmount
             build_flags: '-include "^linux/"'
-            make_check: true
-            make_quicktest: true
-            make_deploy: true
+            check: true
+            quicktest: true
+            deploy: true
 
           - job_name: mac
             os: macOS-latest
@@ -38,9 +38,9 @@ jobs:
             modules: off
             gotags: ''  # cmount doesn't work on osx travis for some reason
             build_flags: '-include "^darwin/amd64" -cgo'
-            make_quicktest: true
-            make_racequicktest: true
-            make_deploy: true
+            quicktest: true
+            racequicktest: true
+            deploy: true
 
           - job_name: windows_amd64
             os: windows-latest
@@ -48,9 +48,9 @@ jobs:
             modules: off
             gotags: cmount
             build_flags: '-include "^windows/amd64" -cgo'
-            make_quicktest: true
-            make_racequicktest: true
-            make_deploy: true
+            quicktest: true
+            racequicktest: true
+            deploy: true
 
           - job_name: windows_386
             os: windows-latest
@@ -59,41 +59,41 @@ jobs:
             gotags: cmount
             goarch: 386
             build_flags: '-include "^windows/386" -cgo'
-            make_quicktest: true
-            make_deploy: true
+            quicktest: true
+            deploy: true
 
           - job_name: other_os
             os: ubuntu-latest
             go: '1.13.x'
             modules: off
             build_flags: '-exclude "^(windows/|darwin/amd64|linux/)"'
-            make_compile_all: true
-            make_deploy: true
+            compile_all: true
+            deploy: true
 
           - job_name: modules_race
             os: ubuntu-latest
             go: '1.13.x'
             modules: on
-            make_quicktest: true
-            make_racequicktest: true
+            quicktest: true
+            racequicktest: true
 
           - job_name: go1.10
             os: ubuntu-latest
             go: '1.10.x'
             modules: off
-            make_quicktest: true
+            quicktest: true
 
           - job_name: go1.11
             os: ubuntu-latest
             go: '1.11.x'
             modules: off
-            make_quicktest: true
+            quicktest: true
 
           - job_name: go1.12
             os: ubuntu-latest
             go: '1.12.x'
             modules: off
-            make_quicktest: true
+            quicktest: true
 
     name: ${{ matrix.job_name }}
 
@@ -171,27 +171,27 @@ jobs:
         run: |
           make
           make quicktest
-        if: matrix.make_quicktest
+        if: matrix.quicktest
 
       - name: Race test
         shell: bash
         run: |
           make racequicktest
-        if: matrix.make_racequicktest
+        if: matrix.racequicktest
 
       - name: Code quality test
         shell: bash
         run: |
           make build_dep
           make check
-        if: matrix.make_check
+        if: matrix.check
 
       - name: Compile all architectures test
         shell: bash
         run: |
           make
           make compile_all
-        if: matrix.make_compile_all
+        if: matrix.compile_all
 
       - name: Deploy built binaries
         shell: bash
@@ -202,4 +202,4 @@ jobs:
           RCLONE_CONFIG_PASS: ${{ secrets.RCLONE_CONFIG_PASS }}
           BETA_SUBDIR: 'github_actions'  # FIXME remove when removing travis/appveyor
         # working-directory: '$(modulePath)'
-        if: matrix.make_deploy && github.head_ref == ''
+        if: matrix.deploy && github.head_ref == ''
