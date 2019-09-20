@@ -37,7 +37,7 @@ jobs:
             go: '1.13.x'
             modules: off
             gotags: ''  # cmount doesn't work on osx travis for some reason
-            build_flags: '-include "^darwin/amd64" -cgo' # FIXME 386 build
+            build_flags: '-include "^darwin/amd64" -cgo'
             make_quicktest: true
             make_racequicktest: true
             make_deploy: true
@@ -66,7 +66,7 @@ jobs:
             os: ubuntu-latest
             go: '1.13.x'
             modules: off
-            build_flags: '-exclude "^(windows|darwin|linux)/"'
+            build_flags: '-exclude "^(windows/|darwin/amd64|linux/)"'
             make_compile_all: true
             make_deploy: true
 
